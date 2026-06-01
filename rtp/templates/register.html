@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register — Telangana Food Genie</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #0d0d0d;
+            overflow: hidden;
+        }
+
+        .bg {
+            position: fixed; inset: 0;
+            background: url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
+            filter: brightness(0.3) saturate(1.3);
+            z-index: 0;
+        }
+
+        .floaters {
+            position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
+        }
+        .floaters span {
+            position: absolute; font-size: 2rem; opacity: 0.07;
+            animation: float linear infinite;
+        }
+        @keyframes float {
+            from { transform: translateY(110vh) rotate(0deg); }
+            to   { transform: translateY(-10vh) rotate(360deg); }
+        }
+
+        .page-wrap {
+            position: relative; z-index: 1;
+            width: 100%; max-width: 440px;
+            padding: 20px;
+        }
+
+        .brand { text-align: center; margin-bottom: 28px; animation: fadeDown 0.6s ease; }
+        .brand-icon { font-size: 3rem; display: block; margin-bottom: 6px; filter: drop-shadow(0 0 20px rgba(46,204,113,0.8)); }
+        .brand h1 { font-size: 1.5rem; font-weight: 700; color: #fff; letter-spacing: 0.5px; }
+        .brand p  { font-size: 0.85rem; color: rgba(255,255,255,0.5); margin-top: 3px; }
+
+        .card {
+            background: rgba(255,255,255,0.07);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255,255,255,0.13);
+            border-radius: 24px;
+            padding: 40px 36px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1);
+            animation: fadeUp 0.6s ease;
+        }
+
+        @keyframes fadeDown { from { opacity:0; transform:translateY(-20px); } to { opacity:1; transform:none; } }
+        @keyframes fadeUp   { from { opacity:0; transform:translateY(20px);  } to { opacity:1; transform:none; } }
+
+        .card h2     { font-size: 1.35rem; font-weight: 600; color: #fff; margin-bottom: 6px; }
+        .card .subtitle { font-size: 0.82rem; color: rgba(255,255,255,0.45); margin-bottom: 28px; }
+
+        .field { margin-bottom: 18px; }
+        .field label {
+            display: block; font-size: 0.78rem; font-weight: 600;
+            color: rgba(255,255,255,0.6); letter-spacing: 0.8px;
+            text-transform: uppercase; margin-bottom: 8px;
+        }
+        .input-wrap { position: relative; display: flex; align-items: center; }
+        .input-icon { position: absolute; left: 14px; font-size: 1rem; opacity: 0.5; pointer-events: none; }
+
+        .field input {
+            width: 100%;
+            padding: 13px 44px 13px 42px;
+            background: rgba(255,255,255,0.08);
+            border: 1.5px solid rgba(255,255,255,0.12);
+            border-radius: 12px;
+            color: #fff;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.92rem;
+            outline: none;
+            transition: border-color 0.25s, background 0.25s, box-shadow 0.25s;
+        }
+        .field input::placeholder { color: rgba(255,255,255,0.3); }
+        .field input:focus {
+            border-color: #27ae60;
+            background: rgba(255,255,255,0.12);
+            box-shadow: 0 0 0 3px rgba(39,174,96,0.2);
+        }
+
+        .toggle-pw {
+            position: absolute; right: 14px;
+            background: none; border: none;
+            color: rgba(255,255,255,0.4);
+            font-size: 1rem; cursor: pointer; padding: 4px;
+            transition: color 0.2s;
+        }
+        .toggle-pw:hover { color: rgba(255,255,255,0.8); }
+
+        /* Password strength */
+        .strength-wrap { margin-top: 10px; }
+        .strength-bar {
+            height: 5px; border-radius: 5px;
+            background: rgba(255,255,255,0.08); overflow: hidden; margin-bottom: 6px;
+        }
+        .strength-fill {
+            height: 100%; border-radius: 5px;
+            transition: width 0.3s ease, background 0.3s ease;
+            width: 0%;
+        }
+        .strength-checks { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+        .chk {
+            font-size: 0.72rem; padding: 3px 9px; border-radius: 20px;
+            background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.35);
+            transition: all 0.2s;
+        }
+        .chk.pass { background: rgba(39,174,96,0.2); color: #2ecc71; }
+
+        /* Requirements note */
+        .req-note {
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.3);
+            margin-top: 6px;
+        }
+
+        .btn-main {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #27ae60, #1e8449);
+            color: white; border: none; border-radius: 12px;
+            font-family: 'Poppins', sans-serif; font-size: 0.95rem; font-weight: 600;
+            cursor: pointer; transition: all 0.25s; margin-top: 8px;
+            box-shadow: 0 4px 20px rgba(39,174,96,0.3);
+            letter-spacing: 0.3px;
+        }
+        .btn-main:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(39,174,96,0.45); }
+        .btn-main:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+        .alerts { margin-bottom: 20px; }
+        .alert {
+            display: flex; align-items: center; gap: 10px;
+            background: rgba(255,77,77,0.15);
+            border: 1px solid rgba(255,77,77,0.3);
+            border-radius: 10px; padding: 11px 14px;
+            font-size: 0.84rem; color: #ff9999; margin-bottom: 10px;
+        }
+
+        .divider {
+            display: flex; align-items: center; gap: 12px; margin: 22px 0;
+        }
+        .divider::before, .divider::after {
+            content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.1);
+        }
+        .divider span { font-size: 0.75rem; color: rgba(255,255,255,0.3); white-space: nowrap; }
+
+        .footer-link { text-align: center; font-size: 0.85rem; color: rgba(255,255,255,0.45); }
+        .footer-link a { color: #27ae60; font-weight: 600; text-decoration: none; transition: color 0.2s; }
+        .footer-link a:hover { color: #2ecc71; }
+
+        .security-note {
+            display: flex; align-items: center; gap: 8px;
+            background: rgba(255,255,255,0.04); border-radius: 8px;
+            padding: 10px 12px; margin-top: 20px;
+            font-size: 0.75rem; color: rgba(255,255,255,0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="bg"></div>
+    <div class="floaters">
+        <span style="left:8%;  animation-duration:16s; animation-delay:0s;">🍛</span>
+        <span style="left:25%; animation-duration:19s; animation-delay:4s;">🥗</span>
+        <span style="left:45%; animation-duration:13s; animation-delay:2s;">🍱</span>
+        <span style="left:65%; animation-duration:17s; animation-delay:1s;">🧆</span>
+        <span style="left:82%; animation-duration:12s; animation-delay:6s;">🍰</span>
+    </div>
+
+    <div class="page-wrap">
+        <div class="brand">
+            <span class="brand-icon">🍛</span>
+            <h1>Telangana Food Genie</h1>
+            <p>Join thousands of food lovers across Telangana</p>
+        </div>
+
+        <div class="card">
+            <h2>Create your account ✨</h2>
+            <p class="subtitle">It's free and takes less than a minute</p>
+
+            {% with messages = get_flashed_messages() %}
+              {% if messages %}
+                <div class="alerts">
+                  {% for message in messages %}
+                    <div class="alert">⚠️ {{ message }}</div>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            {% endwith %}
+
+            <form method="POST" id="regForm" autocomplete="on">
+                <div class="field">
+                    <label>Email Address</label>
+                    <div class="input-wrap">
+                        <span class="input-icon">✉️</span>
+                        <input type="email" name="email" placeholder="you@example.com"
+                               autocomplete="email" required>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label>Create Password</label>
+                    <div class="input-wrap">
+                        <span class="input-icon">🔑</span>
+                        <input type="password" name="password" id="pw"
+                               placeholder="Min. 8 characters"
+                               autocomplete="new-password"
+                               oninput="checkStrength(this.value)"
+                               required minlength="8">
+                        <button type="button" class="toggle-pw" onclick="togglePw('pw', this)">👁️</button>
+                    </div>
+                    <div class="strength-wrap" id="strengthWrap">
+                        <div class="strength-bar">
+                            <div class="strength-fill" id="strengthFill"></div>
+                        </div>
+                        <div class="strength-checks">
+                            <span class="chk" id="chk-len">8+ chars</span>
+                            <span class="chk" id="chk-upper">Uppercase</span>
+                            <span class="chk" id="chk-num">Number</span>
+                            <span class="chk" id="chk-sym">Symbol</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-main" id="submitBtn">🎉 Create Account</button>
+            </form>
+
+            <div class="divider"><span>Already have an account?</span></div>
+            <div class="footer-link">
+                <a href="/login">← Sign in instead</a>
+            </div>
+
+            <div class="security-note">
+                🔒 Your password is hashed with PBKDF2-SHA256. We never store it in plain text.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function togglePw(id, btn) {
+            const inp = document.getElementById(id);
+            inp.type = inp.type === 'password' ? 'text' : 'password';
+            btn.textContent = inp.type === 'password' ? '👁️' : '🙈';
+        }
+
+        function checkStrength(val) {
+            document.getElementById('strengthWrap').style.display = 'block';
+            const checks = {
+                len:   val.length >= 8,
+                upper: /[A-Z]/.test(val),
+                num:   /[0-9]/.test(val),
+                sym:   /[^A-Za-z0-9]/.test(val)
+            };
+            const score = Object.values(checks).filter(Boolean).length;
+            const fill  = document.getElementById('strengthFill');
+            const colors = ['#e74c3c', '#e67e22', '#f1c40f', '#27ae60'];
+            fill.style.width      = `${score * 25}%`;
+            fill.style.background = colors[score - 1] || '#e74c3c';
+
+            Object.entries(checks).forEach(([k, v]) => {
+                const el = document.getElementById(`chk-${k}`);
+                el.classList.toggle('pass', v);
+            });
+        }
+    </script>
+</body>
+</html>
